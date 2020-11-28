@@ -140,16 +140,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="abstract_acceptor.h" />
     <ClInclude Include="abstract_graph.h" />
     <ClInclude Include="abstract_weighted_graph.h" />
+    <ClInclude Include="automata.h" />
     <ClInclude Include="automatas.h" />
+    <ClInclude Include="char_acceptor.h" />
     <ClInclude Include="clock_manager.h" />
+    <ClInclude Include="connector.h" />
     <ClInclude Include="deterministic_finite_state_automata.h" />
     <ClInclude Include="directed_graph.h" />
     <ClInclude Include="directed_weighted_graph.h" />
     <ClInclude Include="epsilon_non_deterministic_finite_state_automata.h" />
     <ClInclude Include="finite_state_automata.h" />
+    <ClInclude Include="labelled_automata.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="non_deterministic_finite_state_automata.h" />
+    <ClInclude Include="regular_expression.h" />
+    <ClInclude Include="regular_expression_automata.h" />
+    <ClInclude Include="repeater.h" />
     <ClInclude Include="timed_automata.h" />
     <ClInclude Include="graph_functions.h" />
     <ClInclude Include="graph_utils.h" />
@@ -157,12 +167,18 @@
     <ClInclude Include="undirected_weighted_graph.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="automata.cpp" />
+    <ClCompile Include="char_acceptor.cpp" />
+    <ClCompile Include="connector.cpp" />
     <ClCompile Include="deterministic_finite_state_automata.cpp" />
     <ClCompile Include="epsilon_non_deterministic_finite_state_automata.cpp" />
     <ClCompile Include="finite_state_automata.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="clock_manager.cpp" />
     <ClCompile Include="non_deterministic_finite_state_automata.cpp" />
+    <ClCompile Include="regular_expression.cpp" />
+    <ClCompile Include="regular_expression_automata.cpp" />
+    <ClCompile Include="repeater.cpp" />
     <ClCompile Include="timed_automata.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

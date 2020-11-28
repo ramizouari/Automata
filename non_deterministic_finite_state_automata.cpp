@@ -2,10 +2,8 @@
 #include <algorithm>
 #include <iterator>
 
-bool non_deterministic_finite_state_automata::run(std::deque<int> sequence) const
+bool non_deterministic_finite_state_automata::execute(std::deque<int>& sequence) const
 {
-	if (sequence.empty())
-		return !accepting_states.contains(first_state);
 	std::set<int> possible_states;
 	possible_states = { first_state };
 	while (!sequence.empty())

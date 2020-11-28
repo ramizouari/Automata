@@ -3,38 +3,20 @@
 
 constexpr int ε = -1;
 
-bool epsilon_non_deterministic_finite_state_automata::run(std::deque<int> sequence) const
+bool epsilon_non_deterministic_finite_state_automata::execute(std::deque<int> &sequence) const
 {
-	/*if (sequence.empty())
-		return !accepting_states.contains(first_state);
-	int state = first_state;
-	epsilon_non_deterministic_finite_state_automata possible_automata(*this);
-	auto s = sequence.front();
-	bool R;
-	for (const auto& T : transitions[state])
-	{
-		if (T.second.contains(s))
-		{
-			possible_automata.first_state = T.first;
-			sequence.pop_front();
-			if (!possible_automata.run(sequence))
-				return false;
-		}
-		else if (T.second.contains(s))
-		{
-			possible_automata.first_state = T.first;
-			if (!possible_automata.run(sequence))
-				return false;
-		}
-	}
-	return true;*/
 	return equivalent_NFA().run(sequence);
+}
+
+void epsilon_non_deterministic_finite_state_automata::inplace_convert()
+{
+	*this = std::move(equivalent_NFA());
 }
 
 void epsilon_non_deterministic_finite_state_automata::add_transition(int i, int j, int c)
 {
-	if (c < -1)
-		throw std::exception("An ε-DFA must have positive labels or ε= -1 label");
+	//if (c < -1)
+		//throw std::exception("An ε-DFA must have positive labels or ε= -1 label");
 	finite_state_automata::add_transition(i, j, c);
 }
 
@@ -139,4 +121,8 @@ bool epsilon_non_deterministic_finite_state_automata::has_epsilon_transition(int
 	if (w->second.empty())
 		return false;
 	return *w->second.begin() == ε;
+}
+
+epsilon_non_deterministic_finite_state_automata::epsilon_non_deterministic_finite_state_automata(non_deterministic_finite_state_automata&& A):non_deterministic_finite_state_automata(std::move(A))
+{
 }

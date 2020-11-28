@@ -3,6 +3,7 @@
 #include "timed_automata.h"
 #include <fstream>
 #include "automatas.h"
+#include "regular_expression.h"
 
 using namespace std;
 
@@ -22,16 +23,8 @@ int main()
 	A.add_transition(4, 3, [](const clock_manager& H)->bool {return (H[0] > 5ms); }, { 0 });
 	A.debug(200ms,1000,file);*/
 
-	NFA_ε A(n, 3, {0});
-	A.add_transition(0, 1,0);
-	A.add_transition(1, 0, 1);
-	A.add_transition(0, 2, 1);
-	A.add_transition(2, 0, -2);
-	A.add_transition(3, 4, 0);
-	A.add_transition(3, 5, 1);
-	A.add_transition(4, 0, 1);
-	A.add_transition(5, 0, 1);
-
-	cout << A.run({1,1});
+	using regex::regular_expression_converter;
+	regular_expression_converter R(R"(^(5|4(35)?2?){5,20}$)");
+	cout << R.match("543543554355435435543554354355435543543554");
 	return false;
 }

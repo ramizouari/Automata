@@ -1,6 +1,6 @@
 #include "deterministic_finite_state_automata.h"
 
-bool deterministic_finite_state_automata::run(std::deque<int> S) const
+bool deterministic_finite_state_automata::execute(std::deque<int>& S) const
 {
 	int state = first_state;
 	while (!S.empty())
