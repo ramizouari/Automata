@@ -1,16 +1,15 @@
 ﻿#include "epsilon_non_deterministic_finite_state_automata.h"
 #include <queue>
 
-constexpr int ε = -1;
 
 bool epsilon_non_deterministic_finite_state_automata::execute(std::deque<int> &sequence) const
 {
-	return equivalent_NFA().run(sequence);
+	return equivalent_NFA2().run(sequence);
 }
 
 void epsilon_non_deterministic_finite_state_automata::inplace_convert()
 {
-	*this = std::move(equivalent_NFA());
+	*this = std::move(equivalent_NFA2());
 }
 
 void epsilon_non_deterministic_finite_state_automata::add_transition(int i, int j, int c)
@@ -27,6 +26,7 @@ void epsilon_non_deterministic_finite_state_automata::add_transition(int i, int 
 
 non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_automata::equivalent_NFA() const
 {
+	//An equivalent, but slow code
 	 non_deterministic_finite_state_automata equivalent(states, first_state, acceptable_states());
 	 for (int i = 0; i < states; i++)
 		 for (const auto& T : transitions[i])
@@ -58,6 +58,90 @@ non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_a
 	 }
 	 return equivalent;
 }
+
+non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_automata::equivalent_NFA2() const
+{
+	non_deterministic_finite_state_automata equivalent(states, first_state, acceptable_states());
+	/*
+	* Let M = (S,Σ,q0,F,E) an ε-NFA with: 
+	* 1. states set S
+	* 2. input symbols set Σ which contains the empty symbol ε
+	* 3. first state q0
+	* 4. accepting states set F
+	* 5. edges set E
+	* Definition: let v1 and v2 two vertices, 
+	* - v2 is epsilon reachable from v1 iff there is a trajectory from v1 too v2 consisting of epsilon edges only
+	* - An ε-edge is an edge whose weight is ε
+	* - A unit cost trajectory from v1 is a trajectory whose edges are all ε-edges except the last one
+	* 
+	* Algorithm:
+	* Let N(S,Σ,q,F',E') be the equivalent NFA
+	* 1. We will construct E' as follow:
+	* For every vertice v in S, For every unit trajectory T from v, we will add in N an edge from v to the other endpoint
+	* of T with label p, where p is the same label of the last edge of T
+	* 2. Let R the reverse machine of N (The machine with the reverse transitions), For every v in S
+	* Let H(v) the set of ε-reachable vertices from v in R, then we have F' is the union of H(v) for v in F 
+	* This algorithm will do a breadth-first search with ε-edges
+	*/
+
+	//For every vertice i in S
+	for(int i=0;i<states;i++)
+	{
+		//We will store the visited vertices in a queue
+		std::queue<int> Q({ i });
+
+		//We will mark here every visited vertice
+		std::vector<bool> visited(states);
+
+		//while there is another path
+		while (!Q.empty())
+		{
+			//get the first visited non-processed edge
+			auto w = Q.front();
+			//pop it from the queue
+			Q.pop();
+
+			//For every edge starting from w
+			for (const auto& T : transitions[w])
+			{
+				//if the other endpoint is w itself, then for every edge from w to itself with label e
+				if (T.first == w) for (auto& e : T.second)
+				{
+					/*
+					* if e is not an ε, by supposition we have an ε-trajectory L from i to w
+					* So there is a unit cost trajectory from i to w with the last edge label e
+					* So, add a transition from i to T.first with label e
+					*/
+					if (e != ε)
+						equivalent.add_transition(i, T.first, e);
+				}
+				//else T.first is different from w
+				else 
+				{
+					//if that vertice is already visited, just skip it
+					if (visited[T.first])
+						continue;
+					//else mark it as visited
+					visited[T.first] = true;
+					//for every edge with label e from w to T.first
+					for (const auto& e : T.second)
+					{
+						//if e is ε, then T.first is ε-reachable from i, add it to the queue
+						if (e == ε)
+							Q.push(T.first);
+						/*
+						* there is a unit cost trajectory from i to T.first, this can be proved by remarking that
+						* every added vertice to the queue is ε-reachabile from i
+						*/
+						else equivalent.add_transition(i, T.first, e);
+					}
+				}
+			}
+		}
+	}
+	return equivalent;
+}
+
 
 epsilon_non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_automata::reverse() const
 {
@@ -92,7 +176,7 @@ std::set<int> epsilon_non_deterministic_finite_state_automata::epsilon_reachable
 			{
 				if (reachable[T.first])
 					continue;
-				if(has_epsilon_transition(w,T.first))
+				if(T.second.contains(ε))
 				{
 					Q.push(T.first);
 					reachable[T.first] = true;

@@ -2,6 +2,14 @@
 #include <algorithm>
 #include <iterator>
 
+bool any_of(const std::vector<bool>& P)
+{
+	for (const auto& s : P)
+	{
+
+	}
+}
+
 bool regular_expression_automata::execute(std::deque<int>& sequence) const
 {
 	std::set<int> possible_states;
@@ -15,6 +23,8 @@ bool regular_expression_automata::execute(std::deque<int>& sequence) const
 		{
 			for (const auto& T : transitions[s])
 			{
+
+				//To do, replace it with a single condition, done in a lazy style
 				if (T.second.contains(character_class::any))
 					S.insert(T.first);
 				else if (T.second.contains(w))

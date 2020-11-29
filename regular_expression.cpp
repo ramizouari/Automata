@@ -4,6 +4,10 @@
 #include <iterator>
 #include <sstream>
 
+/*
+* This helper function is attempted to extract the multiplicity of an element in a regex
+* The argument of this function is the next iterator of the iterator who points to '{'
+*/
 std::pair<int, int> regex::multiplicity(std::string::iterator& a)
 {
 	std::string S[2];
@@ -20,7 +24,33 @@ std::pair<int, int> regex::multiplicity(std::string::iterator& a)
 	std::stringstream stream;
 	stream << S[0] << ' ' << S[1];
 	int n, m;
-	stream >> n >> m;
+	if (stream >> n >> m);
+	else m = -1;
+	return { n,m };
+}
+
+/*
+* This helper function is attempted to extract the multiplicity of an element in a regex
+* The argument of this function is the next iterator of the iterator who points to '{'
+*/
+std::pair<int, int> regex::multiplicity(std::list<char>::iterator a)
+{
+	std::string S[2];
+	int k = 0;
+	while (*a != '}')
+	{
+		if (*a == ',')
+			k++;
+		else S[k].push_back(*a);
+		++a;
+	}
+	if (k == 0)
+		S[1] = S[0];
+	std::stringstream stream;
+	stream << S[0] << ' ' << S[1];
+	int n, m;
+	if (stream >> n >> m);
+	else m = -1;
 	return { n,m };
 }
 
@@ -31,6 +61,11 @@ regex::regular_expression_converter::regular_expression_converter(std::string S)
 	A.inplace_convert();
 }
 
+/* 
+ * Match a string againt the regular expression
+ * As a fact, this function constructs a string of symbol D, execute the automata A on D, and checks whether A
+ * accepts D or not
+ */
 bool regex::regular_expression_converter::match(const std::string& S) const
 {
 	std::deque<int> D;
@@ -38,9 +73,12 @@ bool regex::regular_expression_converter::match(const std::string& S) const
 	return !A.run(D);
 }
 
+/*
+* This helper function converts the regular expression to a form understandable by the reg_machine function
+*/
 std::string regex::regular_expression_converter::standard_form(std::string S)
 {
-	std::string P;
+	/*std::string P;
 
 	for (auto it = S.begin();it!=S.end();++it)
 	{
@@ -69,6 +107,8 @@ std::string regex::regular_expression_converter::standard_form(std::string S)
 					--it1;
 				} while (true);
 			}
+			if ((it1 != S.begin()) && (*(it1 - 1) == '\\'))
+				--it1;
 			++it;
 			auto u = multiplicity(it);
 			for (int i = 0; i < u.first - 1; i++)
@@ -111,7 +151,128 @@ std::string regex::regular_expression_converter::standard_form(std::string S)
 	if (P.back() == '$')
 		P.pop_back();
 	else P += ".*";
-	return P;
+	if (P.find('}') == std::string::npos)
+		return P;
+	else return standard_form(P);
+	*/
+
+	std::list<char> L;
+	std::copy(S.begin(), S.end(), std::back_inserter(L));
+	return standard_form(L);
+}
+
+
+/*
+* This helper function converts the regular expression to a form understandable by the reg_machine function
+* It converts every element :
+* - 'a{n,m}' to 'a' n times and 'a?' m-n times
+* - 'a{n,}' to 'a' n times and 'a*'
+* - If R does not contain '^' as a first symbol, insert '.*' to the beginning of regular expression
+* - If R does not contain '$' as a last symbol, insert '.*' to the end of regular expression
+*/
+std::string regex::regular_expression_converter::standard_form(std::list<char> S)
+{
+	bool add_begin = true;
+	for (auto it = S.begin(); it != S.end();)
+	{
+		if (it == S.begin() && add_begin)
+		{
+			add_begin = false;
+			if ((*it != '^') )
+			{
+				S.insert(it, '.');
+				S.insert(it,  '*');
+				++it;
+				continue;
+			}
+			else
+			{
+				it = S.erase(it);
+				continue;
+			}
+		}
+		if (*it == '{')
+		{
+			auto it1 = std::prev(it);
+			if (*it1 == ')')
+			{
+				int m = 0;
+				do
+				{
+					if (*it1 == ')')
+						m++;
+					else if (*it1 == '(')
+						m--;
+					if (it1 == S.begin())
+						break;
+					if (m == 0)
+						break;
+					--it1;
+				} while (true);
+			}
+			if ((it1 != S.begin()) && (*std::prev(it1) == '\\'))
+				--it1;
+			++it;
+			auto u = multiplicity(it);
+			--it;
+			while (*it != '}')
+				it = S.erase(it);
+			it=S.erase(it);
+
+			auto it2 = std::prev(it);
+			for (int i = 0; i < u.first - 1; i++)
+			{
+				std::copy(it1, it2, std::inserter(S, it));
+				S.insert(it, *it2);
+			}
+			if (u.first == 0)
+			{
+				if (u.second == -1)
+					S.insert(it,'*');
+				else
+				{
+					S.insert(it,'?');
+
+					for (int i = 0; i < u.second - 1; i++)
+					{
+						std::copy(it1, it2, std::inserter(S,it));
+						S.insert(it, *(it2));
+						S.insert(it,'?');
+					}
+				}
+			}
+			else
+			{
+				if (u.second == -1)
+				{
+					std::copy(it1, it2, std::inserter(S,it));
+					S.insert(it, *(it2));
+					S.insert(it,'*');
+				}
+				else
+				{
+					for (int i = u.first - 1; i < u.second - 1; i++)
+					{
+						std::copy(it1, it2, std::inserter(S,it));
+						S.insert(it, *(it2));
+						S.insert(it, '?');
+					}
+				}
+			}
+			continue;
+		}
+		++it;
+	}
+	if (!S.empty() && S.back() == '$')
+		S.pop_back();
+	else
+	{
+		S.push_back('.');
+		S.push_back('*');
+	}
+	std::string standard_S;
+	std::copy(S.begin(), S.end(), std::back_inserter(standard_S));
+	return standard_S;
 }
 
 void append_machine(NFA_ε& M,NFA_ε& B)
@@ -165,12 +326,17 @@ void join_machine(NFA_ε& M, NFA_ε& B,int s)
 }
 
 
-/*this function creates a regular expression machine from a given string
+/*
+	This function creates a regular expression machine from a given string
 */
 regular_expression_automata regex::reg_machine(std::string::iterator a, std::string::iterator b)
 {
 
 	/*
+	* This function accepts a regular expression R and treats it as '^R$'
+	* If you want to create a regular expression machine that is understood as 'find an occurence of R in a string S'
+	* then use '.*R.*'
+	* 
 	* This function has two modes: a recursive and an iterative one
 	* 1. The recursive mode is activated when a '(' is read, it finds the correspending ')' and creates a regular expression
 	* submachine for the string between '(' and ')', it then join that submachine with the parent machine and deactivate the recursive mode
@@ -182,7 +348,7 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 	* '?': the machine gives the last symbol/submachine an accepdted multiplicity of 0 or 1 
 	* 
 	* Notes:
-	* It is guaranteed that this resulting function has only one final state
+	* It is guaranteed that the resulting machine M has only one final state
 	*/
 
 	//m is used to delimit the substring in recursive mode
@@ -204,6 +370,8 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 		else if (*it == ')')
 		{
 			m--;
+
+			//the correspending ')' is found
 			if (m == 0)
 			{
 				it2 = it;

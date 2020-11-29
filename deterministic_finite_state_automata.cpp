@@ -14,6 +14,7 @@ bool deterministic_finite_state_automata::execute(std::deque<int>& S) const
 			{
 				state = T.first;
 			 	stuck = false;
+				break;
 			}
 		}
 		if (stuck)

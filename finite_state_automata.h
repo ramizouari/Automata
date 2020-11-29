@@ -1,10 +1,22 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <set>
 #include <map>
 #include <string>
 #include <deque>
 #include "automata.h"
+
+/*
+* This class is the class of finite state automata
+* a FSA is defined by a quintuple M = (S,Σ,q0,F,E) where: 
+* - S is the set of states
+* - Σ is the set of input symbols
+* - q0 in S is the first state
+* - F included in S is the set of accepting states, in other words final states that are accepted by M
+* - E included in S×Σ×S is the set of transitions(edges) where each edge is (u,e,v): 
+* directed from u to v and labeled by e  
+
+*/
 
 class finite_state_automata:public automata
 {

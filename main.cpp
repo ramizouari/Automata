@@ -4,7 +4,7 @@
 #include <fstream>
 #include "automatas.h"
 #include "regular_expression.h"
-
+#include <string>
 using namespace std;
 
 int main()
@@ -24,7 +24,12 @@ int main()
 	A.debug(200ms,1000,file);*/
 
 	using regex::regular_expression_converter;
-	regular_expression_converter R(R"(^(5|4(35)?2?){5,20}$)");
-	cout << R.match("543543554355435435543554354355435543543554");
+	regular_expression_converter R(R"(^\d{1,}$)");
+	std::string S;
+	do
+	{
+		getline(cin,S);
+		cout << R.match(S);
+	} while (S != "");
 	return false;
 }
