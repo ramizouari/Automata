@@ -4,30 +4,126 @@
 #include <iterator>
 #include <sstream>
 
+template<typename character>
+void convert(std::list<character> &S)
+{
+	auto a = S.begin(), b = S.end();
+	bool in_class=false;
+	while(a!=b)
+	{ 
+		if ((*a == '\\') && (std::next(a) != b)) switch (*std::next(a))
+		{
+		case 'w':
+			a = S.erase(a);
+			*a = character_class::word;
+			break;
+		case 'd':
+			a = S.erase(a);
+			*a = character_class::numeric;
+			break;
+		default:
+			a = S.erase(a);
+			break;
+		}
+		else switch (*a)
+		{
+		case '*':
+			if(!in_class)
+				*a = character_class::kleene_star;
+			break;
+		case '+':
+			if (!in_class)
+				*a = character_class::kleene_plus;
+			break;
+		case '?':
+			if (!in_class)
+				*a = character_class::kleene_quest;
+			break;
+		case '[':
+			in_class = true;
+			*a = character_class::left_class;
+			break;
+		case ']':
+			in_class = false;
+			*a = character_class::right_class;
+			break;
+		case '(':
+			if(!in_class)
+				*a = character_class::left_group;
+			break;
+		case ')':
+			if(!in_class)
+				*a = character_class::right_group;
+			break;
+		case '.':
+			*a = character_class::any;
+			break;
+		case '-':
+			if (in_class)
+				*a = character_class::class_dash;
+			break;
+		case '|':
+			if (in_class)
+			{
+				a = S.erase(a);
+				--a;
+			}
+			else *a = character_class::disjunction;
+			break;
+		}
+		++a;
+	}
+}
+
+std::vector<std::pair<int, int>> classes(std::string::iterator &a)
+{
+	std::vector<std::pair<int, int>> C;
+	if (*a == character_class::left_class)
+		++a;
+	int u, v;
+	while (*a != character_class::right_class)
+	{
+		
+		u = *a;
+		++a;
+		if ((*a == character_class::class_dash)&&(*(a+1)!=character_class::right_class))
+		{
+			++a;
+			v = *a;
+			++a;
+		}
+		else v = u;
+		C.push_back({ u,v });
+	}
+	return C;
+}
+
+
+void configure_multiplicity(std::string::iterator &a,regular_expression_automata &S,int start,int end)
+{
+	switch (*(a+1))
+	{
+	case character_class::kleene_star:
+		S.add_transition(start, end);
+		S.add_transition(end, start);
+		++a;
+		break;
+	case character_class::kleene_plus:
+		S.add_transition(end, start);
+		++a;
+		break;
+	case character_class::kleene_quest:
+		S.add_transition(start, end);
+		++a;
+		break;
+	}
+}
+
 /*
 * This helper function is attempted to extract the multiplicity of an element in a regex
 * The argument of this function is the next iterator of the iterator who points to '{'
 */
-std::pair<int, int> regex::multiplicity(std::string::iterator& a)
-{
-	std::string S[2];
-	int k = 0;
-	while (*a != '}')
-	{
-		if (*a == ',')
-			k++;
-		else S[k].push_back(*a);
-		++a;
-	}
-	if (k == 0)
-		S[1] = S[0];
-	std::stringstream stream;
-	stream << S[0] << ' ' << S[1];
-	int n, m;
-	if (stream >> n >> m);
-	else m = -1;
-	return { n,m };
-}
+
 
 /*
 * This helper function is attempted to extract the multiplicity of an element in a regex
@@ -172,6 +268,7 @@ std::string regex::regular_expression_converter::standard_form(std::string S)
 */
 std::string regex::regular_expression_converter::standard_form(std::list<char> S)
 {
+	convert(S);
 	bool add_begin = true;
 	for (auto it = S.begin(); it != S.end();)
 	{
@@ -180,8 +277,8 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 			add_begin = false;
 			if ((*it != '^') )
 			{
-				S.insert(it, '.');
-				S.insert(it,  '*');
+				S.insert(it, character_class::any);
+				S.insert(it, character_class::kleene_star);
 				++it;
 				continue;
 			}
@@ -194,14 +291,14 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 		if (*it == '{')
 		{
 			auto it1 = std::prev(it);
-			if (*it1 == ')')
+			if (*it1 == character_class::right_group)
 			{
 				int m = 0;
 				do
 				{
-					if (*it1 == ')')
+					if (*it1 == character_class::right_group)
 						m++;
-					else if (*it1 == '(')
+					else if (*it1 == character_class::left_group)
 						m--;
 					if (it1 == S.begin())
 						break;
@@ -210,8 +307,15 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 					--it1;
 				} while (true);
 			}
-			if ((it1 != S.begin()) && (*std::prev(it1) == '\\'))
-				--it1;
+			else if(*it1 == character_class::right_class)
+			{
+				do
+				{
+					if (*it1 == character_class::left_class)
+						break;
+					--it1;
+				} while (it1 != S.begin());
+			}
 			++it;
 			auto u = multiplicity(it);
 			--it;
@@ -228,16 +332,16 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 			if (u.first == 0)
 			{
 				if (u.second == -1)
-					S.insert(it,'*');
+					S.insert(it, character_class::kleene_star);
 				else
 				{
-					S.insert(it,'?');
+					S.insert(it, character_class::kleene_quest);
 
 					for (int i = 0; i < u.second - 1; i++)
 					{
 						std::copy(it1, it2, std::inserter(S,it));
 						S.insert(it, *(it2));
-						S.insert(it,'?');
+						S.insert(it, character_class::kleene_quest);
 					}
 				}
 			}
@@ -247,7 +351,7 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 				{
 					std::copy(it1, it2, std::inserter(S,it));
 					S.insert(it, *(it2));
-					S.insert(it,'*');
+					S.insert(it, character_class::kleene_star);
 				}
 				else
 				{
@@ -255,7 +359,7 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 					{
 						std::copy(it1, it2, std::inserter(S,it));
 						S.insert(it, *(it2));
-						S.insert(it, '?');
+						S.insert(it, character_class::kleene_quest);
 					}
 				}
 			}
@@ -267,8 +371,9 @@ std::string regex::regular_expression_converter::standard_form(std::list<char> S
 		S.pop_back();
 	else
 	{
-		S.push_back('.');
-		S.push_back('*');
+
+		S.push_back( character_class::any);
+		S.push_back( character_class::kleene_star);
 	}
 	std::string standard_S;
 	std::copy(S.begin(), S.end(), std::back_inserter(standard_S));
@@ -359,7 +464,8 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 	regular_expression_automata A(1, 0, { 0 });
 	for (auto it = a,it1=a,it2=a; it != b; ++it)
 	{
-		if (*it == '(')
+		//If the carrent value represents a starting of a group
+		if (*it == character_class::left_group)
 		{
 			if (!recursive_mode)
 				it1 = it + 1;
@@ -367,7 +473,8 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 			recursive_mode = true;
 			m++;
 		}
-		else if (*it == ')')
+		//Else if it reprensents the ending of a group
+		else if (*it == character_class::right_group)
 		{
 			m--;
 
@@ -382,16 +489,16 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 				//Configuring multiplicity of the submachine S
 				if (it + 1 != b) switch (*(it + 1))
 				{
-				case '*':
+				case character_class::kleene_star:
 					S.add_transition(0, s);
 					S.add_transition(s, 0);
 					++it;
 					break;
-				case '+':
+				case character_class::kleene_plus:
 					S.add_transition(s, 0);
 					++it;
 					break;
-				case '?':
+				case character_class::kleene_quest:
 					S.add_transition(0, s);
 					++it;
 					break;
@@ -406,9 +513,49 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 				recursive_mode = false;
 			}
 		}
+		// If it represents a class of characters
+		else if (!recursive_mode && (*it == character_class::left_class))
+		{
+			//gets the last added final state
+			int v1 = final_states.front();
+			final_states.pop_front();
+
+			//Adding a state
+			auto v2 = A.add_state();
+			auto cl = classes(it);
+			bool increment = false;
+			for (auto h : cl) for(int c=h.first;c<=h.second;c++)
+			{
+				if((it+1)!=b )switch (*(it + 1))
+				{
+				case character_class::kleene_plus:
+					A.add_transition(v1, v2, c);
+					A.add_transition(v2, v2, c);
+					increment=true;
+					break;
+				case character_class::kleene_star:
+					A.add_transition(v1, v2);
+					A.add_transition(v2, v2, c);
+					increment = true;
+					break;
+				case character_class::kleene_quest:
+					A.add_transition(v1, v2);
+					A.add_transition(v1, v2, c);
+					increment = true;
+					break;
+				default:
+					A.add_transition(v1, v2, c);
+				}
+				else A.add_transition(v1, v2, c);
+			}
+			if (increment)
+				++it;
+			final_states.push_front(v2);
+			
+		}
 		else if (!recursive_mode) 
 		{
-			if (*it == '|')
+			if (*it == character_class::disjunction)
 			{
 				//adds epsilon as a final state
 				final_states.push_front(0);
@@ -422,47 +569,22 @@ regular_expression_automata regex::reg_machine(std::string::iterator a, std::str
 			//Adding a state
 			auto v2=A.add_state();
 			char c;
-			switch (*it)
-			{
-			case '.':
-				c = character_class::any;
-				break;
-			case '\\':
-			{	
-				bool skip = true;
-				++it;
-				switch (*it)
-				{
-				case 'd':
-					c = character_class::numeric;
-					break;
-				case 'w':
-					c = character_class::word;
-					break;
-				default:
-					skip = false;
-				}
-				if (skip)
-					break;
-			}
-			default:
-				c = *it;
-			}
+			c = *it;
 			//Configuring multiplicity
 			if((it+1)!=b)
 			switch (*(it+1))
 			{
-			case '+':
+			case character_class::kleene_plus:
 				A.add_transition(v1, v2, c);
 				A.add_transition(v2, v2, c);
 				++it;
 				break;
-			case '*':
+			case character_class::kleene_star:
 				A.add_transition(v1,v2);
 				A.add_transition(v2, v2, c);
 				++it;
 				break;
-			case '?':
+			case character_class::kleene_quest:
 				A.add_transition(v1, v2);
 				A.add_transition(v1, v2, c);
 				++it;

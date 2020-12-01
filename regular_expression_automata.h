@@ -1,9 +1,25 @@
 #pragma once
 #include "epsilon_non_deterministic_finite_state_automata.h"
 
+/*
+* This enumeration is used to mark special values for some charaters
+* - any: .
+* - word: \w
+* - numeric: \d
+* - left_group: (
+* - right_group: )
+* - disjunction: |
+* - kleene_star: *
+* - kleene_plus: +
+* - kleene_quest: ?
+* - left_class: [
+* - right_class: ]
+* - class_dash: -
+*/
 enum character_class
 {
-    any=-2,word=-3,numeric=-4,alpha=-5,upcase=-6,downcase=-7
+    any=-2,word=-3,numeric=-4,alpha=-5,upcase=-6,downcase=-7,left_group=1,right_group,
+    disjunction,kleene_star,kleene_plus,kleene_quest,left_class,right_class,class_dash
 };
 
 class regular_expression_automata :

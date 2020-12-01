@@ -5,6 +5,7 @@
 #include "automatas.h"
 #include "regular_expression.h"
 #include <string>
+#include <fstream>
 using namespace std;
 
 int main()
@@ -24,7 +25,7 @@ int main()
 	A.debug(200ms,1000,file);*/
 
 	using regex::regular_expression_converter;
-	regular_expression_converter R(R"(^\d{1,}$)");
+	regular_expression_converter R(R"(^(a+)+$)");
 	std::string S;
 	do
 	{

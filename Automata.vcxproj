@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_SILENCE_CXX20_CODECVT_FACETS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -141,16 +141,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="abstract_acceptor.h" />
-    <ClInclude Include="abstract_graph.h" />
-    <ClInclude Include="abstract_weighted_graph.h" />
     <ClInclude Include="automata.h" />
     <ClInclude Include="automatas.h" />
     <ClInclude Include="char_acceptor.h" />
     <ClInclude Include="clock_manager.h" />
     <ClInclude Include="connector.h" />
     <ClInclude Include="deterministic_finite_state_automata.h" />
-    <ClInclude Include="directed_graph.h" />
-    <ClInclude Include="directed_weighted_graph.h" />
     <ClInclude Include="epsilon_non_deterministic_finite_state_automata.h" />
     <ClInclude Include="finite_state_automata.h" />
     <ClInclude Include="labelled_automata.h">
@@ -161,10 +157,6 @@
     <ClInclude Include="regular_expression_automata.h" />
     <ClInclude Include="repeater.h" />
     <ClInclude Include="timed_automata.h" />
-    <ClInclude Include="graph_functions.h" />
-    <ClInclude Include="graph_utils.h" />
-    <ClInclude Include="undirected_graph.h" />
-    <ClInclude Include="undirected_weighted_graph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="automata.cpp" />

@@ -18,7 +18,7 @@ void clock_manager::reset(int i)
 
 void clock_manager::reset(const std::set<int> &S)
 {
-	auto current_time = default_clock::now();
+ 	auto current_time = default_clock::now();
 	for (auto& s : S)
 		T[s] = current_time;
 }

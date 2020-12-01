@@ -2,14 +2,6 @@
 #include <algorithm>
 #include <iterator>
 
-bool any_of(const std::vector<bool>& P)
-{
-	for (const auto& s : P)
-	{
-
-	}
-}
-
 bool regular_expression_automata::execute(std::deque<int>& sequence) const
 {
 	std::set<int> possible_states;

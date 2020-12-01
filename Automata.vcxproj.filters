@@ -13,38 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\graph">
-      <UniqueIdentifier>{3f1c2c1c-8bf1-4652-9bda-e96dd27bcfb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\automatas">
       <UniqueIdentifier>{d4b92d1b-eefd-41cb-9251-38978e04ff1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="abstract_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="abstract_weighted_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="directed_weighted_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="directed_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="undirected_weighted_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="undirected_graph.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="graph_utils.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
-    <ClInclude Include="graph_functions.h">
-      <Filter>Header Files\graph</Filter>
-    </ClInclude>
     <ClInclude Include="clock_manager.h">
       <Filter>Header Files\automatas</Filter>
     </ClInclude>
