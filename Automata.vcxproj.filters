@@ -42,19 +42,7 @@
     <ClInclude Include="labelled_automata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="repeater.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="abstract_acceptor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="connector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="char_acceptor.h">
       <Filter>Header Files\automatas</Filter>
     </ClInclude>
     <ClInclude Include="regular_expression.h">
@@ -86,16 +74,7 @@
     <ClCompile Include="epsilon_non_deterministic_finite_state_automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="repeater.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="automata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="connector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="char_acceptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="regular_expression.cpp">
@@ -104,5 +83,10 @@
     <ClCompile Include="regular_expression_automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

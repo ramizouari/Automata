@@ -1,6 +1,19 @@
-#include "regular_expression_automata.h"
+﻿#include "regular_expression_automata.h"
 #include <algorithm>
 #include <iterator>
+#include <locale>
+
+#include <algorithm>
+#include <iterator>
+
+
+regular_expression_automata::regular_expression_automata(const std::locale& L,int n, int q0, const std::set<int>& F):epsilon_non_deterministic_finite_state_automata(n,q0,F),loc(L)
+{
+}
+
+regular_expression_automata::regular_expression_automata(int n, int q0, const std::set<int>& F) : epsilon_non_deterministic_finite_state_automata(n, q0, F),loc(std::locale())
+{
+}
 
 bool regular_expression_automata::execute(std::deque<int>& sequence) const
 {
@@ -21,11 +34,11 @@ bool regular_expression_automata::execute(std::deque<int>& sequence) const
 					S.insert(T.first);
 				else if (T.second.contains(w))
 					S.insert(T.first);
-				else if (isalpha(w) && T.second.contains(character_class::alpha))
+				else if (std::isalpha<char32_t>(w, loc) && T.second.contains(character_class::alpha))
 					S.insert(T.first);
-				else if (isalnum(w) && T.second.contains(character_class::word))
+				else if (std::isalnum<char32_t>(w, loc) && T.second.contains(character_class::word))
 					S.insert(T.first);
-				else if (isdigit(w) && T.second.contains(character_class::numeric))
+				else if (std::isdigit<char32_t>(w, loc) && T.second.contains(character_class::numeric))
 					S.insert(T.first);
 			}
 		}

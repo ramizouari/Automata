@@ -140,12 +140,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="abstract_acceptor.h" />
     <ClInclude Include="automata.h" />
     <ClInclude Include="automatas.h" />
-    <ClInclude Include="char_acceptor.h" />
     <ClInclude Include="clock_manager.h" />
-    <ClInclude Include="connector.h" />
     <ClInclude Include="deterministic_finite_state_automata.h" />
     <ClInclude Include="epsilon_non_deterministic_finite_state_automata.h" />
     <ClInclude Include="finite_state_automata.h" />
@@ -155,13 +152,10 @@
     <ClInclude Include="non_deterministic_finite_state_automata.h" />
     <ClInclude Include="regular_expression.h" />
     <ClInclude Include="regular_expression_automata.h" />
-    <ClInclude Include="repeater.h" />
     <ClInclude Include="timed_automata.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="automata.cpp" />
-    <ClCompile Include="char_acceptor.cpp" />
-    <ClCompile Include="connector.cpp" />
     <ClCompile Include="deterministic_finite_state_automata.cpp" />
     <ClCompile Include="epsilon_non_deterministic_finite_state_automata.cpp" />
     <ClCompile Include="finite_state_automata.cpp" />
@@ -170,8 +164,10 @@
     <ClCompile Include="non_deterministic_finite_state_automata.cpp" />
     <ClCompile Include="regular_expression.cpp" />
     <ClCompile Include="regular_expression_automata.cpp" />
-    <ClCompile Include="repeater.cpp" />
     <ClCompile Include="timed_automata.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

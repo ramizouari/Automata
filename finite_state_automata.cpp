@@ -66,7 +66,12 @@ int finite_state_automata::add_state()
 	return states-1;
 }
 
-std::map<int, std::set<int>> finite_state_automata::get_transition(int i) const
+std::map<int, std::set<int>> finite_state_automata::get_transitions(int i) const
 {
 	return transitions[i];
+}
+
+std::vector<std::map<int, std::set<int>>> finite_state_automata::get_transitions() const
+{
+	return transitions;
 }

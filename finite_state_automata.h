@@ -38,6 +38,7 @@ public:
 	std::set<int> get_accepting_states();
 	void remove_transition(int i, int j, int c);
 	int add_state();
-	std::map<int, std::set<int>> get_transition(int i) const;
+	std::map<int, std::set<int>> get_transitions(int i) const;
+	std::vector<std::map<int, std::set<int>>> get_transitions() const;
 	virtual bool execute(std::deque<int> &sequence) const = 0;
 };

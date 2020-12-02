@@ -9,7 +9,11 @@ bool epsilon_non_deterministic_finite_state_automata::execute(std::deque<int> &s
 
 void epsilon_non_deterministic_finite_state_automata::inplace_convert()
 {
-	*this = std::move(equivalent_NFA2());
+	auto NFA_machine = equivalent_NFA2();
+	this->accepting_states = std::move(NFA_machine.get_accepting_states());
+	this->first_state = NFA_machine.get_initial_state();
+	this->states = NFA_machine.get_states_number();
+	this->transitions = std::move(NFA_machine.get_transitions());
 }
 
 void epsilon_non_deterministic_finite_state_automata::add_transition(int i, int j, int c)
@@ -39,7 +43,7 @@ non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_a
 		 changed = false;
 		 for (int i = 0; i < states; i++)
 		 {
-			 for (const auto& T : equivalent.get_transition(i))
+			 for (const auto& T : equivalent.get_transitions(i))
 			 {
 				 if (T.second.contains(ε))
 				 {
