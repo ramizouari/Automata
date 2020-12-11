@@ -1,0 +1,6 @@
+
+# set the project name and version
+add_executable(finite_state_automata finite_state_automata.cpp)
+add_executable(deterministic_finite_state_automata deterministic_finite_state_automata.cpp)
+add_executable(non_deterministic_finite_state_automata non_deterministic_finite_state_automata.cpp)
+add_executable(epsilon_non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_automata.cpp)

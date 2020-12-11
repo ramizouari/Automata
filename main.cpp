@@ -6,7 +6,6 @@
 #include "regex/regular_expression.h"
 #include <string>
 #include <fstream>
-#include "labelled_automata.h"
 using namespace std;
 
 

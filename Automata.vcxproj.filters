@@ -88,4 +88,10 @@
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="timed\CMakeLists.txt" />
+    <Text Include="regex\CMakeLists.txt" />
+    <Text Include="fsm\CMakeLists.txt" />
+  </ItemGroup>
 </Project>
