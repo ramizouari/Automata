@@ -1,11 +1,12 @@
 ﻿#include <iostream>
-#include "clock_manager.h"
-#include "timed_automata.h"
+#include "timed/clock_manager.h"
+#include "timed/timed_automata.h"
 #include <fstream>
 #include "automatas.h"
-#include "regular_expression.h"
+#include "regex/regular_expression.h"
 #include <string>
 #include <fstream>
+#include "labelled_automata.h"
 using namespace std;
 
 

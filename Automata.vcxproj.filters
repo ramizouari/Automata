@@ -9,33 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\automatas">
       <UniqueIdentifier>{d4b92d1b-eefd-41cb-9251-38978e04ff1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="clock_manager.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="finite_state_automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="timed_automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="deterministic_finite_state_automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="non_deterministic_finite_state_automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
-    <ClInclude Include="epsilon_non_deterministic_finite_state_automata.h">
-      <Filter>Header Files\automatas</Filter>
-    </ClInclude>
     <ClInclude Include="automatas.h">
       <Filter>Header Files\automatas</Filter>
     </ClInclude>
@@ -45,42 +23,63 @@
     <ClInclude Include="automata.h">
       <Filter>Header Files\automatas</Filter>
     </ClInclude>
-    <ClInclude Include="regular_expression.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="regular_expression_automata.h">
+    <ClInclude Include="fsm\deterministic_finite_state_automata.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="fsm\epsilon_non_deterministic_finite_state_automata.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="fsm\finite_state_automata.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="fsm\non_deterministic_finite_state_automata.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="regex\regular_expression_automata.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="regex\regular_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="timed\clock_manager.h">
+      <Filter>Header Files\automatas</Filter>
+    </ClInclude>
+    <ClInclude Include="timed\timed_automata.h">
       <Filter>Header Files\automatas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="clock_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="timed_automata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="finite_state_automata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="non_deterministic_finite_state_automata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="deterministic_finite_state_automata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="epsilon_non_deterministic_finite_state_automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regular_expression.cpp">
+    <ClCompile Include="fsm\deterministic_finite_state_automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regular_expression_automata.cpp">
+    <ClCompile Include="fsm\epsilon_non_deterministic_finite_state_automata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fsm\finite_state_automata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fsm\non_deterministic_finite_state_automata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="regex\regular_expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="regex\regular_expression_automata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timed\clock_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timed\timed_automata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

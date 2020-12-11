@@ -1,5 +1,5 @@
 #pragma once
-#include "epsilon_non_deterministic_finite_state_automata.h"
+#include "fsm/epsilon_non_deterministic_finite_state_automata.h"
 #include <locale>
 
 /*

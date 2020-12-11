@@ -1,12 +1,11 @@
-#ifdef NOT_INCLUDED
 #pragma once
-#include "finite_state_automata.h"
+#include "fsm/finite_state_automata.h"
 #include <map>
 #include <iterator>
 #include <algorithm>
 
 template<typename T1,typename T2>
-class automata_labeller
+class automata_labeller :public automata
 {
 	finite_state_automata& automata;
 	std::map<T1, int> state_transform;
@@ -15,11 +14,11 @@ class automata_labeller
 	std::map<int, T2> transition_inverse_transform;
 	automata_labeller(finite_state_automata& A) :automata(A) {}
 public:
-	bool run(const std::deque<T2> &S) const 
+	bool execute(const std::deque<T2> &S) const 
 	{
 		std::deque<int> S0;
 		std::transform(S.begin(), S.end(), std::back_inserter(S0),
-			[&transition_transform](auto w) {return transition_transform[w]};);
+			[&transition_transform](auto w) {return transition_transform[w]; });
 		return automata.run(S0); 
 	};
 	void add_transition(T1 a, T1 b, T2 v)
@@ -43,7 +42,7 @@ public:
 		state_transform = transform;
 	}
 
-	vodi set_states_label(const std::map<char, int>& transform)
+	void set_states_label(const std::map<char, int>& transform)
 	{
 		transition_transform = transform;
 	}
@@ -101,4 +100,3 @@ public:
 		transition_transform = transform;
 	}
 };
-#endif
