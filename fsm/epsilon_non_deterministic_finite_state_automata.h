@@ -14,7 +14,7 @@ class epsilon_non_deterministic_finite_state_automata : public non_deterministic
 	using non_deterministic_finite_state_automata::non_deterministic_finite_state_automata;
 	void add_transition(int i, int j, int c) override;
 	void add_transition(int i, int j);
-	static constexpr int ε = -1;
+	inline static constexpr int ε = -1;
 	bool execute(std::deque<int>& S) const override;
 	void inplace_convert();
 private:

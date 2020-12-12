@@ -13,7 +13,7 @@ using namespace std;
 * This class is an example of a custom locale
 * It gives the ability to recognize arabic digits as digits
 */
-struct arabic_digit_ctype : std::ctype<char32_t>
+/*struct arabic_digit_ctype : std::ctype<char32_t>
 {
 	std::u32string S = U"٠١٢٣٤٥٦٧٨٩";
 
@@ -23,6 +23,8 @@ struct arabic_digit_ctype : std::ctype<char32_t>
 		return ctype::do_is(m, c); // leave the rest to the parent class
 	}
 };
+*/
+
 int main()
 {
 	int n=6,m = 2;
@@ -41,14 +43,9 @@ int main()
 
 	using regex::regular_expression_converter;
 
-	std::locale loc(std::locale(""), new arabic_digit_ctype);
-
-	std::locale::global(std::locale(""));
-
-	regular_expression_converter<char32_t> R(UR"(^\d$)",loc);
-	std::u32string S;
-	std::basic_ifstream<char32_t> file("input.txt");
-	while(getline(file, S))
+	regular_expression_converter<char> R(R"(^\d$)");
+	std::basic_string<char> S;
+	while(getline(std::cin, S))
 	{
 		cout << R.match(S);
 	}

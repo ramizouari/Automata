@@ -15,7 +15,7 @@ bool non_deterministic_finite_state_automata::execute(std::deque<int>& sequence)
 		{
 			for (const auto& T : transitions[s])
 			{
-				if (T.second.contains(w)) 
+				if (T.second.count(w)) 
 					S.insert(T.first);
 			}
 		}

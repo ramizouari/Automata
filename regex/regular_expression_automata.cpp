@@ -30,15 +30,15 @@ bool regular_expression_automata::execute(std::deque<int>& sequence) const
 			{
 
 				//To do, replace it with a single condition, done in a lazy style
-				if (T.second.contains(character_class::any))
+				if (T.second.count(character_class::any))
 					S.insert(T.first);
-				else if (T.second.contains(w))
+				else if (T.second.count(w))
 					S.insert(T.first);
-				else if (std::isalpha<char32_t>(w, loc) && T.second.contains(character_class::alpha))
+				else if (std::isalpha<char>(w, loc) && T.second.count(character_class::alpha))
 					S.insert(T.first);
-				else if (std::isalnum<char32_t>(w, loc) && T.second.contains(character_class::word))
+				else if (std::isalnum<char>(w, loc) && T.second.count(character_class::word))
 					S.insert(T.first);
-				else if (std::isdigit<char32_t>(w, loc) && T.second.contains(character_class::numeric))
+				else if (std::isdigit<char>(w, loc) && T.second.count(character_class::numeric))
 					S.insert(T.first);
 			}
 		}
@@ -55,11 +55,8 @@ bool regular_expression_automata::execute(std::deque<int>& sequence) const
 
 void regular_expression_automata::add_transition(int i, int j, int a, int b)
 {
-	if ((a >= 256) || (b >= 256))
-		throw std::exception("A class with ASCII range that surpasses 256 is not Supported Yet");
-	else if (a > b)
-		throw std::exception("a cannot be greater than b");
-	else if (a == b)
+
+	if (a == b)
 		epsilon_non_deterministic_finite_state_automata::add_transition(i, j, a);
 	else {
 		intervals_number++;

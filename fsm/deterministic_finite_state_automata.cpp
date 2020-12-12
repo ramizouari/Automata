@@ -10,7 +10,7 @@ bool deterministic_finite_state_automata::execute(std::deque<int>& S) const
 		bool stuck = true;
 		for (const auto& T : transitions[state])
 		{
-			if (T.second.contains(s))
+			if (T.second.count(s))
 			{
 				state = T.first;
 			 	stuck = false;
@@ -20,5 +20,5 @@ bool deterministic_finite_state_automata::execute(std::deque<int>& S) const
 		if (stuck)
 			return true;
 	}
-	return !accepting_states.contains(state);
+	return !accepting_states.count(state);
 }

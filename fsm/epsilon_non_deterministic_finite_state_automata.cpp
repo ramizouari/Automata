@@ -2,6 +2,7 @@
 #include <queue>
 
 
+
 bool epsilon_non_deterministic_finite_state_automata::execute(std::deque<int> &sequence) const
 {
 	return equivalent_NFA2().run(sequence);
@@ -45,7 +46,7 @@ non_deterministic_finite_state_automata epsilon_non_deterministic_finite_state_a
 		 {
 			 for (const auto& T : equivalent.get_transitions(i))
 			 {
-				 if (T.second.contains(ε))
+				 if (T.second.count(ε))
 				 {
 					 equivalent.remove_transition(i, T.first, ε);
 					 changed = true;
@@ -180,7 +181,7 @@ std::set<int> epsilon_non_deterministic_finite_state_automata::epsilon_reachable
 			{
 				if (reachable[T.first])
 					continue;
-				if(T.second.contains(ε))
+				if(T.second.count(ε))
 				{
 					Q.push(T.first);
 					reachable[T.first] = true;

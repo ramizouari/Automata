@@ -2,6 +2,7 @@
 #include "regular_expression_automata.h"
 #include <list>
 #include <sstream>
+#include <iostream>
 #include <algorithm>
 #include <iterator>
 
@@ -11,37 +12,32 @@ namespace regex
 
 
 	void join_machine(NFA_ε& M, NFA_ε& B, int s);
-
-	/*
-	* This class is responsable for creating a regular expression from a string and locale
+		/*
+	* This function returns the intervals used to describe a class
 	*/
 	template<typename character>
-	class regular_expression_converter
+	std::vector<std::pair<int, int>> classes(typename std::basic_string<character>::iterator& a)
 	{
-		regular_expression_automata A;
-	public:
-		/*
-		 This function creates a regular expression machine from a given string
-	 */
-		regular_expression_converter(std::basic_string< character> S,const std::locale &L=std::locale()): A(reg_machine<character>(standard_form<character>(S),L))
+		std::vector<std::pair<int, int>> C;
+		if (*a == character_class::left_class)
+			++a;
+		int u, v;
+		while (*a != character_class::right_class)
 		{
-			A.inplace_convert();
-		};
 
-		/*
-		* Match a string againt the regular expression
-		* As a fact, this function constructs a string of symbols D, execute the automata A on D, and checks whether A
-		* accepts D or not
-		*/
-		bool match(const std::basic_string< character>&S) const 
-		{
-			std::deque<int> D;
-			std::copy(S.begin(), S.end(), std::back_inserter(D));
-			return !A.run(D);
+			u = *a;
+			++a;
+			if ((*a == character_class::class_dash) && (*(a + 1) != character_class::right_class))
+			{
+				++a;
+				v = *a;
+				++a;
+			}
+			else v = u;
+			C.push_back({ u,v });
 		}
-		;
-	private:
-	};
+		return C;
+	}
 
 	template<typename character>
 	regular_expression_automata reg_machine(typename std::basic_string<character>::iterator a, 
@@ -226,41 +222,12 @@ namespace regex
 		return A;
 	}
 
-	/*
-	* This function returns the intervals used to describe a class
-	*/
-	template<typename character>
-	std::vector<std::pair<int, int>> classes(typename std::basic_string<character>::iterator& a)
-	{
-		std::vector<std::pair<int, int>> C;
-		if (*a == character_class::left_class)
-			++a;
-		int u, v;
-		while (*a != character_class::right_class)
-		{
-
-			u = *a;
-			++a;
-			if ((*a == character_class::class_dash) && (*(a + 1) != character_class::right_class))
-			{
-				++a;
-				v = *a;
-				++a;
-			}
-			else v = u;
-			C.push_back({ u,v });
-		}
-		return C;
-	}
 
 	template<typename character>
 	regular_expression_automata reg_machine(std::basic_string<character> S,const std::locale & L =std::locale())
 	{
 		return reg_machine<character>(S.begin(), S.end(),L);
 	}
-	
-
-
 
 	/*
 	* This helper function is attempted to extract the multiplicity of an element in a regex
@@ -392,28 +359,6 @@ namespace regex
 	}
 
 
-
-
-	/*
-	* This helper function converts the regular expression to a form understandable by the reg_machine function
-	* It converts every element :
-	* - 'a{n,m}' to 'a' n times and 'a?' m-n times
-	* - 'a{n,}' to 'a' n times and 'a*'
-	* - If R does not contain '^' as a first symbol, insert '.*' to the beginning of regular expression
-	* - If R does not contain '$' as a last symbol, insert '.*' to the end of regular expression
-	*/
-
-	template<typename character>
-	std::basic_string<character> standard_form( std::basic_string<character> S)
-	{
-		std::list<character> L;
-		std::copy(S.begin(), S.end(), std::back_inserter(L));
-		return standard_form_list<character>(L);
-	}
-
-
-
-
 	/*
 	* This helper function converts the regular expression to a form understandable by the reg_machine function
 	* It converts every element :
@@ -538,4 +483,55 @@ namespace regex
 		return standard_S;
 	}
 
+	/*
+	* This helper function converts the regular expression to a form understandable by the reg_machine function
+	* It converts every element :
+	* - 'a{n,m}' to 'a' n times and 'a?' m-n times
+	* - 'a{n,}' to 'a' n times and 'a*'
+	* - If R does not contain '^' as a first symbol, insert '.*' to the beginning of regular expression
+	* - If R does not contain '$' as a last symbol, insert '.*' to the end of regular expression
+	*/
+
+	template<typename character>
+	std::basic_string<character> standard_form( std::basic_string<character> S)
+	{
+		std::list<character> L;
+		std::copy(S.begin(), S.end(), std::back_inserter(L));
+		return standard_form_list<character>(L);
+	}
+
+
+
+
+
+/*
+	* This class is responsable for creating a regular expression from a string and locale
+	*/
+	template<typename character>
+	class regular_expression_converter
+	{
+		regular_expression_automata A;
+	public:
+		/*
+		 This function creates a regular expression machine from a given string
+	 */
+		regular_expression_converter(std::basic_string< character> S,const std::locale &L=std::locale()): A(reg_machine<character>(standard_form<character>(S),L))
+		{
+			A.inplace_convert();
+		};
+
+		/*
+		* Match a string againt the regular expression
+		* As a fact, this function constructs a string of symbols D, execute the automata A on D, and checks whether A
+		* accepts D or not
+		*/
+		bool match(const std::basic_string< character>&S) const 
+		{
+			std::deque<int> D;
+			std::copy(S.begin(), S.end(), std::back_inserter(D));
+			return !A.run(D);
+		}
+		;
+	private:
+	};
 }
