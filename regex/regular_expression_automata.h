@@ -29,7 +29,7 @@ class regular_expression_automata :
 {
     int intervals_number;
     std::map<int, std::pair<int, int>> intervals;
-    const std::locale& loc;
+    std::locale loc;
 public:
     regular_expression_automata(const std::locale & L,int n = 0, int q0 = 0, const std::set<int>& F = {});
     regular_expression_automata(int n = 0, int q0 = 0, const std::set<int>& F = {});

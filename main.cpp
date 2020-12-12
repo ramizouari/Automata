@@ -43,11 +43,12 @@ int main()
 
 	using regex::regular_expression_converter;
 
-	regular_expression_converter<char> R(R"(^\d$)");
-	std::basic_string<char> S;
+	std::basic_string<char> S,reg;
+	std::cout << "Regular Expression: ";
+	std::getline(std::cin, reg);	
+	regular_expression_converter<char> R(reg);
 	while(getline(std::cin, S))
-	{
-		cout << R.match(S);
-	}
-	return false;
+		cout << R.match(S) << '\n';
+	
+	return 0;
 }
