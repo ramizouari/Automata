@@ -23,6 +23,16 @@ enum character_class
     disjunction,kleene_star,kleene_plus,kleene_quest,left_class,right_class,class_dash
 };
 
+/*
+* This is a class of regular expression automatas (parsers): REA
+* It is a generalisation of NFA_ε with introduction of character classes
+* A character is a label
+* A character class is a set of characters
+* A transition from u to v consisting of a character class C is informally the same as the set of transitions
+* from u to v consisting of characters e in C
+
+*/
+
 class regular_expression_automata :
     public epsilon_non_deterministic_finite_state_automata
 
