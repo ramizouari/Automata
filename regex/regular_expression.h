@@ -123,42 +123,49 @@ namespace regex
 			// If it represents a class of characters
 			else if (!recursive_mode && (*it == character_class::left_class))
 			{
-				//gets the last added final state
-				int v1 = final_states.front();
-				final_states.pop_front();
 
-				//Adding a state
-				auto v2 = A.add_state();
 				auto cl = classes<character>(it);
-				bool increment = false;
-				for (auto h : cl) for (int c = h.first; c <= h.second; c++)
+				if (!cl.empty())
 				{
-					if ((it + 1) != b)switch (*(it + 1))
+					//gets the last added final state
+					int v1 = final_states.front();
+					final_states.pop_front();
+					//Adding a state
+					auto v2 = A.add_state();
+					bool increment = false;
+					for (auto h : cl) for (int c = h.first; c <= h.second; c++)
 					{
-					case character_class::kleene_plus:
-						A.add_transition(v1, v2, c);
-						A.add_transition(v2, v2, c);
-						increment = true;
-						break;
-					case character_class::kleene_star:
-						A.add_transition(v1, v2);
-						A.add_transition(v2, v2, c);
-						increment = true;
-						break;
-					case character_class::kleene_quest:
-						A.add_transition(v1, v2);
-						A.add_transition(v1, v2, c);
-						increment = true;
-						break;
-					default:
-						A.add_transition(v1, v2, c);
+						if ((it + 1) != b)switch (*(it + 1))
+						{
+						case character_class::kleene_plus:
+							A.add_transition(v1, v2, c);
+							A.add_transition(v2, v2, c);
+							increment = true;
+							break;
+						case character_class::kleene_star:
+							A.add_transition(v1, v2);
+							A.add_transition(v2, v2, c);
+							increment = true;
+							break;
+						case character_class::kleene_quest:
+							A.add_transition(v1, v2);
+							A.add_transition(v1, v2, c);
+							increment = true;
+							break;
+						default:
+							A.add_transition(v1, v2, c);
+						}
+						else A.add_transition(v1, v2, c);
 					}
-					else A.add_transition(v1, v2, c);
+					if (increment)
+						++it;
+					final_states.push_front(v2);
 				}
-				if (increment)
-					++it;
-				final_states.push_front(v2);
-
+				else if (it+1 != b) switch (*(it+1))
+						case character_class::kleene_plus:
+						case character_class::kleene_star:
+						case character_class::kleene_quest:
+							++it;
 			}
 			else if (!recursive_mode)
 			{

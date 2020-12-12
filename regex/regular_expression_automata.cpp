@@ -55,14 +55,8 @@ bool regular_expression_automata::execute(std::deque<int>& sequence) const
 
 void regular_expression_automata::add_transition(int i, int j, int a, int b)
 {
-
-	if (a == b)
-		epsilon_non_deterministic_finite_state_automata::add_transition(i, j, a);
-	else {
-		intervals_number++;
-		transitions[i][j].insert(intervals_number);
-		intervals[intervals_number] = { a,b };
-	}
+	for(int k=a;k<=b;k++)
+		transitions[i][j].insert(k);
 }
 
 void regular_expression_automata::add_transition(int i, int j, character_class c)
