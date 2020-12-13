@@ -243,8 +243,10 @@ namespace regex
 	template<typename character>
 	std::pair<int, int> multiplicity(typename std::basic_string<character>::iterator& a)
 	{
+		//a pair of strings, the first containing the lower limit, the second containing the upper limit
 		std::basic_string<character> S[2];
 		int k = 0;
+		//Fill both strings
 		while (*a != character('}'))
 		{
 			if (*a == character(','))
@@ -252,8 +254,10 @@ namespace regex
 			else S[k].push_back(*a);
 			++a;
 		}
+		//If only one limit is given, then it is both the upper and lower limit
 		if (k == 0)
 			S[1] = S[0];
+		//Convert to a pair of integers
 		int n=0, m=0,R;
 		for (int i = 0, R = 1; i < S[0].size(); i++, R *= 10)
 			n += R * (S[0][i] - '0');
@@ -274,6 +278,8 @@ namespace regex
 	{
 		auto a = S.begin(), b = S.end();
 		bool in_class = false;
+		if ((a != b) && (*a == '^'))
+			*a = character_class::begin;
 		while (a != b)
 		{
 			if ((*a == '\\') && (std::next(a) != b)) switch (*std::next(a))
@@ -335,6 +341,9 @@ namespace regex
 				}
 				else *a = character_class::disjunction;
 				break;
+			case '$':
+				if (std::next(a) == b)
+					*a = character_class::end;
 			}
 			++a;
 		}
@@ -385,7 +394,7 @@ namespace regex
 			if (it == S.begin() && add_begin)
 			{
 				add_begin = false;
-				if (*it != '^')
+				if (*it != character_class::begin)
 				{
 					S.insert(it, character_class::any);
 					S.insert(it, character_class::kleene_star);
@@ -477,7 +486,7 @@ namespace regex
 			}
 			++it;
 		}
-		if (!S.empty() && S.back() == '$')
+		if (!S.empty() && S.back() == character_class::end)
 			S.pop_back();
 		else
 		{

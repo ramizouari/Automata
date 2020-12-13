@@ -16,11 +16,13 @@
 * - left_class: [
 * - right_class: ]
 * - class_dash: -
+* - beginning: ^
+* - end: $
 */
 enum character_class
 {
     any,word,numeric,alpha,upcase,downcase,left_group,right_group,
-    disjunction,kleene_star,kleene_plus,kleene_quest,left_class,right_class,class_dash
+    disjunction,kleene_star,kleene_plus,kleene_quest,left_class,right_class,class_dash,begin,end
 };
 
 /*
